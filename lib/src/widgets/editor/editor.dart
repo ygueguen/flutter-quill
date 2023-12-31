@@ -130,8 +130,10 @@ class QuillEditor extends StatefulWidget {
     required QuillEditorConfigurations configurations,
     FocusNode? focusNode,
     ScrollController? scrollController,
+    Key? key,
   }) {
     return QuillEditor(
+      key: key,
       scrollController: scrollController ?? ScrollController(),
       focusNode: focusNode ?? FocusNode(),
       configurations: configurations.copyWith(
@@ -341,6 +343,11 @@ class QuillEditorState extends State<QuillEditor>
 
   @override
   GlobalKey<EditorState> get editableTextKey => _editorKey;
+
+  TextPosition? getTextPosition({required Offset globalPos}) {
+    return _editorKey.currentState?.renderEditor
+        .getPositionForOffset(globalPos);
+  }
 
   @override
   bool get forcePressEnabled => false;
@@ -568,6 +575,48 @@ class _QuillEditorSelectionGestureDetectorBuilder
       }
     }
     super.onSingleLongTapEnd(details);
+  }
+
+  @override
+  void onDragSelectionStart(DragStartDetails details) {
+    if (_state.configurations.onDragSelectionStart != null) {
+      if (renderEditor != null &&
+          _state.configurations.onDragSelectionStart!(
+            details,
+            renderEditor!.getPositionForOffset,
+          )) {
+        return;
+      }
+    }
+    super.onDragSelectionStart(details);
+  }
+
+  @override
+  void onDragSelectionUpdate(DragUpdateDetails details) {
+    if (_state.configurations.onDragSelectionUpdate != null) {
+      if (renderEditor != null &&
+          _state.configurations.onDragSelectionUpdate!(
+            details,
+            renderEditor!.getPositionForOffset,
+          )) {
+        return;
+      }
+    }
+    super.onDragSelectionUpdate(details);
+  }
+
+  @override
+  void onDragSelectionEnd(DragEndDetails details) {
+    if (_state.configurations.onDragSelectionEnd != null) {
+      if (renderEditor != null &&
+          _state.configurations.onDragSelectionEnd!(
+            details,
+            renderEditor!.getPositionForOffset,
+          )) {
+        return;
+      }
+    }
+    super.onDragSelectionEnd(details);
   }
 }
 

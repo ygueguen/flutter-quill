@@ -52,6 +52,9 @@ class QuillEditorConfigurations extends Equatable {
     this.onSingleLongTapStart,
     this.onSingleLongTapMoveUpdate,
     this.onSingleLongTapEnd,
+    this.onDragSelectionStart,
+    this.onDragSelectionUpdate,
+    this.onDragSelectionEnd,
     this.embedBuilders,
     this.unknownEmbedBuilder,
     this.linkActionPickerDelegate = defaultLinkActionPickerDelegate,
@@ -238,6 +241,21 @@ class QuillEditorConfigurations extends Equatable {
           LongPressEndDetails details, TextPosition Function(Offset offset))?
       onSingleLongTapEnd;
 
+  // Returns whether gesture is handled
+  final bool Function(
+          DragStartDetails details, TextPosition Function(Offset offset))?
+      onDragSelectionStart;
+
+  // Returns whether gesture is handled
+  final bool Function(
+          DragUpdateDetails details, TextPosition Function(Offset offset))?
+      onDragSelectionUpdate;
+
+  // Returns whether gesture is handled
+  final bool Function(
+          DragEndDetails details, TextPosition Function(Offset offset))?
+      onDragSelectionEnd;
+
   final Iterable<EmbedBuilder>? embedBuilders;
   final EmbedBuilder? unknownEmbedBuilder;
   final CustomStyleBuilder? customStyleBuilder;
@@ -347,7 +365,23 @@ class QuillEditorConfigurations extends Equatable {
     EdgeInsetsGeometry? padding,
     bool? autoFocus,
     bool? isOnTapOutsideEnabled,
+    bool Function(TapDownDetails details, TextPosition Function(Offset offset))?
+        onTapDown,
+    bool Function(TapUpDetails details, TextPosition Function(Offset offset))?
+        onTapUp,
     Function(PointerDownEvent event, FocusNode focusNode)? onTapOutside,
+    bool Function(LongPressStartDetails details,
+            TextPosition Function(Offset offset))?
+        onSingleLongTapStart,
+    bool Function(
+          DragStartDetails details, TextPosition Function(Offset offset))?
+      onDragSelectionStart,
+    bool Function(
+          DragEndDetails details, TextPosition Function(Offset offset))?
+      onDragSelectionEnd,
+    bool Function(
+          DragUpdateDetails details, TextPosition Function(Offset offset))?
+      onDragSelectionUpdate,
     bool? showCursor,
     bool? paintCursorAboveText,
     bool? enableInteractiveSelection,
@@ -395,7 +429,13 @@ class QuillEditorConfigurations extends Equatable {
       autoFocus: autoFocus ?? this.autoFocus,
       isOnTapOutsideEnabled:
           isOnTapOutsideEnabled ?? this.isOnTapOutsideEnabled,
+      onTapDown: onTapDown ?? this.onTapDown,
+      onTapUp: onTapUp ?? this.onTapUp,
       onTapOutside: onTapOutside ?? this.onTapOutside,
+      onSingleLongTapStart: onSingleLongTapStart ?? this.onSingleLongTapStart,
+      onDragSelectionStart: onDragSelectionStart ?? this.onDragSelectionStart,
+      onDragSelectionUpdate: onDragSelectionUpdate ?? this.onDragSelectionUpdate,
+      onDragSelectionEnd: onDragSelectionEnd ?? this.onDragSelectionEnd,
       showCursor: showCursor ?? this.showCursor,
       paintCursorAboveText: paintCursorAboveText ?? this.paintCursorAboveText,
       enableInteractiveSelection:
