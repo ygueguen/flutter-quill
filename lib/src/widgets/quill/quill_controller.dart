@@ -229,6 +229,9 @@ class QuillController extends ChangeNotifier {
     return text;
   }
 
+  // 1 because the text always contains an end-of-line character
+  bool get isPristine => plainTextEditingValue.text.length <= 1;
+
   /// Returns all styles for any character within the specified text range.
   List<Style> getAllSelectionStyles() {
     final styles = document.collectAllStyles(
@@ -433,40 +436,6 @@ class QuillController extends ChangeNotifier {
       const TextSelection.collapsed(offset: 0),
       ChangeSource.local,
     );
-  }
-
-  void invertSelectAll() {
-    final currentBase = _selection.baseOffset;
-    final currentExtent = _selection.extentOffset;
-    final end = plainTextEditingValue.text.length;
-
-    if (currentBase == 0 && currentExtent == 0) {
-      selectAll();
-    } else if (currentBase == 0 && currentExtent == end) {
-      deselectAll();
-      // TODO cursor should be at the beginning or the end depending on the direction of the selection
-    } else if (currentBase == 0 && currentExtent > 0) {
-      updateSelection(
-        TextSelection(
-          baseOffset: currentExtent,
-          extentOffset: end,
-        ),
-        ChangeSource.local,
-      );
-    } else if (currentBase == end && currentExtent == end) {
-      selectAll();
-      // TODO cursor should remain at the end (does it matter here actually ?) 
-    }
-    else if (currentBase > 0 && currentExtent == end) {
-      updateSelection(
-        TextSelection(
-          baseOffset: 0,
-          extentOffset: currentExtent,
-        ),
-        ChangeSource.local,
-      );
-      // TODO cursor should be at the extent
-    }
   }
 
   void updateSelection(TextSelection textSelection, ChangeSource source) {
