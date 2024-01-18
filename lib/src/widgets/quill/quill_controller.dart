@@ -147,8 +147,8 @@ class QuillController extends ChangeNotifier {
   /// included in the result.
   Style getSelectionStyle() {
     return document
-        .collectStyle(selection.start, selection.end - selection.start)
-        .mergeAll(toggledStyle);
+        .collectStyle(selection.start, selection.end - selection.start);
+        // .mergeAll(toggledStyle);
   }
 
   // Increases or decreases the indent of the current selection by 1.
